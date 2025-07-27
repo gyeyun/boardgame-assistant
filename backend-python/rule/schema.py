@@ -12,3 +12,9 @@ class RuleGenerateResponse(BaseModel):
     penaltyRules: List[str]
     victoryCondition: str
     designNote: str
+
+
+# dto - 게임 규칙 재생성
+class RuleRegenerateRequest(BaseModel):
+   ruleId: int
+   feedback: str

@@ -83,3 +83,93 @@ JSON 외에는 아무 문장도 포함하지 마세요.
             "hint": str(e),
             "raw": response
         }
+    
+# 규칙 재생성
+# 임시 데이터로(rule_store) 수정필요
+rule_store = {
+    23: {
+    "turnStructure": "1. 자원 수집 → 2. 행동 선택 → 3. 전투 또는 협상 → 4. 턴 종료 처리",
+    "actionRules": [
+        "자원 수집 시 무작위 카드 2장과 1 토큰 획득",
+        "상대 진영과 협상 시 거래 조건을 비공개로 제안 가능",
+        "전투 시 주사위로 결과 결정, 추가 카드 사용 가능"
+        ],
+    "victoryCondition": "유물을 3개 먼저 수집하면 즉시 승리",
+    "penaltyRules": [
+        "자원이 0일 때 행동 제한 발생",
+        "동맹을 배신할 경우 다음 2턴간 협상 불가"
+        ],
+      "designNote": "게임 흐름이 직관적이면서도, 협상과 배신이 자연스럽게 녹아들도록 구조화함"
+}
+}
+
+def regenerate_rule(rule_id: int, feedback: str) -> dict:
+    # 기존 룰 조회
+    rule_data = rule_store.get(rule_id)
+    if rule_data is None:
+        return {
+            "error": "존재하지 않는 ruleId 입니다.",
+            "hint": f"ruleId {rule_id} 에 해당하는 컨셉이 없습니다."
+        }
+    
+    prompt = f"""
+다음 피드백을 반영해 새로운 아이디어를 제시해주세요.
+
+- 피드백: "{feedback}"
+
+기존 규칙 정보:
+- 턴 구조: {rule_data["turnStructure"]}
+- 행동 규칙: {rule_data["actionRules"]}
+- 승리 조건: {rule_data["victoryCondition"]}
+- 페널티 규칙: {rule_data["penaltyRules"]}
+- 디자인 노트: {rule_data["designNote"]}
+
+
+응답은 반드시 아래 형식을 따라야 합니다.
+JSON 외에는 아무 문장도 포함하지 마세요.
+
+예시:
+{{
+  "turnStructure": "1. 자원 수집 → 2. 행동 선택 → 3. 전투 또는 협상 → 4. 턴 종료 처리",
+  "actionRules": [
+    "자원 수집 시 무작위 카드 2장과 1 토큰 획득",
+    "상대 진영과 협상 시 거래 조건을 비공개로 제안 가능",
+    "전투 시 주사위로 결과 결정, 추가 카드 사용 가능"
+  ],
+  "victoryCondition": "유물을 3개 먼저 수집하면 즉시 승리",
+  "penaltyRules": [
+    "자원이 0일 때 행동 제한 발생",
+    "동맹을 배신할 경우 다음 2턴간 협상 불가"
+  ],
+  "designNote": "게임 흐름이 직관적이면서도, 협상과 배신이 자연스럽게 녹아들도록 구조화함"
+}}
+"""
+    response = call_openai(prompt)
+    # print("LLM 응답:", response)
+
+    try:
+        # 응답에서 JSON만 추출 (앞뒤에 문장이 붙을 수 있음)
+        json_start = response.find('{')
+        json_end = response.rfind('}') + 1
+        json_text = response[json_start:json_end]
+        parsed = json.loads(json_text)
+
+        #룰 ID 생성 및 삽입(랜덤으로 우선처리)
+        parsed["ruleId"] = random.randint(3000, 9999)
+
+        #키가 빈 경우
+        parsed.setdefault("turnStructure", "")
+        parsed.setdefault("actionRules", [])
+        parsed.setdefault("victoryCondition", "")
+        parsed.setdefault("penaltyRules", [])
+        parsed.setdefault("designNote", "")
+
+        return parsed
+    
+    except Exception as e:
+        print("JSON 파싱 실패:", e)
+        return {
+            "error": "LLM 응답 파싱 실패",
+            "hint": str(e),
+            "raw": response
+        }
