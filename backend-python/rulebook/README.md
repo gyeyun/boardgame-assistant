@@ -7,6 +7,9 @@
 - [ ] plan 기반 설명 요약 생성
 - [ ] /api/content/generate-rulebook-script API 구현
 
+기획안 plan 으로 불러옴 -> 수정 해야함
+
+
 python -m venv venv
 가상환경 활성화
 source venv/bin/activate
