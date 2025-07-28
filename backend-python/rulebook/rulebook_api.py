@@ -27,7 +27,7 @@ class RulebookResponse(BaseModel):
     win_condition: str
     turn_order: str
 
-@router.post("/api/rulebook/generate-from-plan", response_model=RulebookResponse)
+@router.post("/api/content/generate-rulebook-script", response_model=RulebookResponse)
 def generate_rulebook_from_existing_plan(plan_id: int, db: Session = Depends(get_db)):
     # 1. 기획안 조회
     plan = db.query(Plan).filter(Plan.plan_id == plan_id).first()
