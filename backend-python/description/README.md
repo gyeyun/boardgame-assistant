@@ -7,7 +7,7 @@
 - [ ] rulebook 기반 설명 요약 생성
 - [ ] /api/content/generate-description-script API 구현
 
-
+python -m venv venv
 가상환경 활성화
 source venv/bin/activate
 

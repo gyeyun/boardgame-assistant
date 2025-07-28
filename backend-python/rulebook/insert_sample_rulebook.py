@@ -9,7 +9,7 @@ db = SessionLocal()
 
 rulebook = Rulebook(
     plan_id=1,
-    rulebook_set="""
+    rule_set="""
 1. 게임 개요
 플레이어들은 궁정 연금술사 자리를 두고 경쟁하며 약초, 광물 등을 수집하고 정수를 생산해 칙령을 수행하는 전략 게임입니다.
 

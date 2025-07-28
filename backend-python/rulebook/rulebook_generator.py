@@ -7,7 +7,7 @@ def generate_rulebook_from_prompt(prompt: str):
 다음 기획안을 바탕으로 보드게임의 룰북을 작성해줘.
 
 기획안:
-{plan_text}
+{prompt}
 
 룰북은 다음 9개의 항목으로 구성되어야 해:
 

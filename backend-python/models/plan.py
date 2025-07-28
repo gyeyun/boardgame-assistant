@@ -6,4 +6,4 @@ class Plan(Base):
 
     plan_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255))
-    text = Column(Text)  # <- 추가됨
+    text = Column(Text)  

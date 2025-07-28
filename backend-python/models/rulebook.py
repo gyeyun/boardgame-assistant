@@ -7,7 +7,7 @@ class Rulebook(Base):
 
     rulebook_id = Column(Integer, primary_key=True, index=True)
     plan_id = Column(Integer, ForeignKey("plan.plan_id"))
-    rulebook_set = Column(Text)
+    rule_set = Column(Text)
     win_condition = Column(Text)
     turn_order = Column(Text)
     created_at = Column(DateTime, default=datetime.utcnow)
