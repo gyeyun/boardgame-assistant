@@ -1,8 +1,8 @@
-from utils.openai_utils import call_openai
 import re
+from utils.openai_utils import call_openai
 
 def generate_rulebook_from_prompt(prompt: str):
-    # 1. OpenAI에 보낼 프롬프트 생성
+    # 1. OpenAI에 보낼 프롬프트
     full_prompt = f"""
 너는 전문 보드게임 디자이너야.
 다음 기획안을 바탕으로 보드게임의 룰북을 작성해줘.
@@ -30,38 +30,21 @@ def generate_rulebook_from_prompt(prompt: str):
     # 2. OpenAI 호출
     response = call_openai(full_prompt)
 
-    # 3. 줄 단위 분할
-    lines = response.splitlines()
-
-    # 4. title 추출 (줄 기반)
-    title = ""
-    for i, line in enumerate(lines):
-        if "1. 게임 제목" in line and i + 1 < len(lines):
-            title = lines[i + 1].strip()
-            break
-
-    # 5. age 추출 (한 줄만)
-    def extract_age_section():
-        for i, line in enumerate(lines):
-            if "4. 적정 연령" in line and i + 1 < len(lines):
-                return lines[i + 1].strip()
-        return ""
-
-    # 6. 나머지 항목 정규식 추출 함수
-    def extract_section(section_title):
-        pattern = rf"{section_title}[^\n]*\n[-●•]?\s*(.*?)(?=\n\d+\. ?|\Z)"
+    # 3. 항목별 파싱
+    def extract_field(num: int):
+        pattern = rf"{num}\.\s.*?\n(.*?)(?=\n\d+\.|\Z)"
         match = re.search(pattern, response, re.DOTALL)
         return match.group(1).strip() if match else ""
 
-    # 7. 항목별 파싱
-    intro = extract_section("2. 게임 소개")
-    components = extract_section("3. 구성품")
-    age = extract_age_section()
-    setup = extract_section("5. 게임 준비")
-    rule_set = extract_section("6. 게임 규칙")
-    progress = extract_section("7. 게임 진행 방식")
-    win_condition = extract_section("8. 승리 조건")
-    turn_order = extract_section("9. 턴 순서")
+    # 4. 개별 항목 추출
+    title = extract_field(1)
+    intro = extract_field(2)
+    components = extract_field(3)
+    age = extract_field(4)
+    setup = extract_field(5)
+    rule_set = extract_field(6)
+    progress = extract_field(7)
+    win_condition = extract_field(8)
+    turn_order = extract_field(9)
 
-    # 8. 결과 반환
     return title, intro, components, age, setup, rule_set, progress, win_condition, turn_order
