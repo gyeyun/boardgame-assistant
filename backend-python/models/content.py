@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, Text, DateTime, ForeignKey, String
 from db.db_connector import Base
 from datetime import datetime
 
+
 class Content(Base):
     __tablename__ = "content"
     content_id = Column(Integer, primary_key=True, autoincrement=True)
