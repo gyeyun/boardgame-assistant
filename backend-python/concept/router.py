@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from concept.schema import ConceptGenerateRequest, ConceptGenerateResponse, ConceptRegenerateRequest, ConceptExpansionRequest, ConceptExpansionResponse
-from concept.generator import generate_concept, regenerate_concept, expand_concept
+from concept.schema import ConceptGenerateRequest, ConceptGenerateResponse, ConceptRegenerateRequest, ComponentRequest, ComponentResponse
+from concept.generator import generate_concept, regenerate_concept, generate_components
 
 router = APIRouter(prefix="/api/plans")
 
@@ -12,7 +12,7 @@ def generate_concept_api(req: ConceptGenerateRequest):
 def regenerate_concept_api(req: ConceptRegenerateRequest):
     return regenerate_concept(req.conceptId, req.feedback, req.planId)
 
-@router.post("/expand-concept", response_model=ConceptExpansionResponse)
-def expand_concept_api(req: ConceptExpansionRequest):
-    return expand_concept(req.conceptId, req.focus, req.detailLevel)
+@router.post("/generate-components", response_model=ComponentResponse)
+def generate_components_api(req: ComponentRequest):
+    return generate_components(req.planId)
 

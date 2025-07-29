@@ -26,13 +26,15 @@ class ConceptRegenerateRequest(BaseModel):
     feedback: str
 
 # 컨셉기반요소생성
-class ConceptExpansionRequest(BaseModel):
-    conceptId: int
-    focus: str
-    detailLevel: str
+class ComponentRequest(BaseModel):
+    planId: int
 
-class ConceptExpansionResponse(BaseModel):
-    interactions: List[str]
-    resources: List[str]
-    flow: List[str]
-    designTips: List[str]
+
+class Component(BaseModel): 
+    type: str # 예: "토큰", "카드", "보드" 
+    name: str # 예: "에너지 토큰" 
+    effect: str # 기능 또는 설명 
+    visualType: str # 예: "2D", "3D" 
+
+class ComponentResponse(BaseModel):
+    components: List[Component]

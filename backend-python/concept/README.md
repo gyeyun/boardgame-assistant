@@ -8,6 +8,8 @@
 - [x] 컨셉 생성 로직 작성 (generator.py)
 - [x] 컨셉 기반 요소 제안 로직 추가
 - [x] /api/plans/generate-concept API 구현
-- g[x] /api/plans/regenerate-concept API 구현
-- [ ] /api/plans/expand-concept API 구현
-> expand-concept의 경우, **콘셉아이디를 기준으로 테마, 아이디어 등으로 구성된 데이터를 가져옴->프롬프트에 추가** 하는 흐름으로 되어있어 해당 부분은 체크표시를 안함. db구성 후 수정필요. (현재는 임시데이터로 하드코딩됨.)
+- [x] /api/plans/regenerate-concept API 구현  
+- [ ] /api/plans/generate-components API 구현  
+> 임시데이터 하드코딩. 보강 필요
+>/api/plans/expand-concept API 구현  
+-> 노션 API 확인시 해당 api 사라짐 확인. 변경완료.

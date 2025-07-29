@@ -95,53 +95,64 @@ def regenerate_concept(concept_id: int, feedback: str, planId: int) -> dict:
         }
     
 # 컨셉 기반 요소 생성
-# 컨셉 조회용 임시 데이터로(concept_store) 수정필요
-concept_store = {
-    5566: {
-        "theme": "요리경쟁",
-        "playerCount": "2명",
-        "averageWeight": 2.3,
-        "ideaText": "플레이어는 주어진 재료를 활용하여 레시피를 완성하고 심사위원들의 평가를 받는 요리 대회를 펼칩니다.",
-        "mechanics": "재료 수집, 레시피 완성, 심사 평가",
-        "storyline": "세계적인 요리 대회에 참가한 플레이어들이 최고의 요리를 만들어서 우승을 차지하기 위해 경쟁합니다."
+# 임시데이터로 수정 필요
+plan_store = {
+    1012: {
+    "conceptId": 1001,
+    "theme": "전략",
+    "playerCount": "2~4명",
+    "averageWeight": 3,
+    "ideaText": "플레이어는 전략적인 지형을 활용해 상대를 견제하는 턴제 전투를 벌입니다.",
+    "mechanics": "지역 점령, 카드 드래프트, 핸드 매니지먼트",
+    "storyline": "고대 제국의 후예들이 전설의 유물을 차지하기 위해 맞붙는다.",
+    "createdAt": "2025-07-24T15:00:00"
     }
 }
 
-def expand_concept(concept_id: int, focus: str, detailLevel: str) -> dict:
-    # 컨셉 조회
-    concept_data = concept_store.get(concept_id)
-    if concept_data is None:
+def generate_components(plan_id: int) -> dict:
+    # 플랜 조회
+    plan_data = plan_store.get(plan_id)
+    if plan_data is None:
         return {
-            "error": "존재하지 않는 conceptId입니다.",
-            "hint": f"conceptId {concept_id} 에 해당하는 컨셉이 없습니다."
+            "error": "존재하지 않는 planId입니다.",
+            "hint": f"conceptId {plan_id} 에 해당하는 컨셉이 없습니다."
         }
 
     prompt = f"""
-컨셉 정보를 기반으로 보드게임의 상세 설계 요소를 생성해주세요.
+기획 정보를 기반으로 보드게임의 상세 설계 요소를 생성해주세요.
 
-컨셉 정보:
-- 테마: {concept_data['theme']}
-- 아이디어: {concept_data['ideaText']}
-- 메커닉: {concept_data['mechanics']}
-- 스토리라인: {concept_data['storyline']}
-
-{focus}에 집중하며, {detailLevel} 수준으로 구체적으로 작성해주세요.
+기획 정보:
+- 테마: {plan_data['theme']}
+- 인원 수: {plan_data['playerCount']}
+- 난이도: {plan_data['averageWeight']}
+- ideaText: {plan_data['ideaText']}
+- 스토리라인: {plan_data['storyline']}
+- 매커니즘 : {plan_data['mechanics']}
 
 반드시 아래 구조의 JSON 하나로만 반환해주세요:
 
 예시:
+예시 형식:
 {{
-  "interactions": ["동맹/배신", "비공개 행동"],
-  "resources": ["자원 카드", "시간 토큰"],
-  "flow": [
-    "자원 수집",
-    "행동 선택",
-    "전투 또는 설득",
-    "투표 및 평판 변화"
-  ],
-  "designTips": [
-    "자원마다 희소성을 달리하여 전략성을 부여하세요.",
-    "동맹 후 배신 시 보너스 or 패널티를 부여하여 심리전을 유도하세요."
+  "components": [
+    {{
+      "type": "토큰",
+      "name": "시간 조각 토큰",
+      "effect": "점수 계산에 사용",
+      "visualType": "3D"
+    }},
+    {{
+      "type": "카드",
+      "name": "마법 봉인 카드",
+      "effect": "상대방의 다음 행동을 무효화합니다.",
+      "visualType": "2D"
+    }},
+    {{
+      "type": "보드",
+      "name": "비밀 통로 보드",
+      "effect": "특정 위치를 통해 빠르게 이동할 수 있습니다.",
+      "visualType": "2D"
+    }}
   ]
 }}
 """
@@ -153,11 +164,6 @@ def expand_concept(concept_id: int, focus: str, detailLevel: str) -> dict:
         json_end = response.rfind('}') + 1
         json_text = response[json_start:json_end]
         parsed = json.loads(json_text)
-
-        # 혹시 키가 빈 경우
-        for key in ["interactions", "resources", "flow", "designTips"]:
-            if key not in parsed:
-                parsed[key] = []
 
         return parsed
 
