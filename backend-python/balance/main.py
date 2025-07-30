@@ -1,10 +1,10 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from evaluator1 import evaluate_balance
 from typing import List
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-#uvicorn main:app --reload
+from evaluator1 import evaluate_balance
+
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -16,17 +16,24 @@ class GameData(BaseModel):
     rules: List[str]
     win_conditions: List[str]
     fail_conditions: List[str]
-#테스트용
+
+class BalanceAnalysis(BaseModel):
+    simulationSummary: str
+    issuesDetected: List[str]
+    recommendations: List[str]
+    balanceScore: float
+
+class BalanceFeedbackResponse(BaseModel):
+    balanceAnalysis: BalanceAnalysis
+
 @app.get("/")
 async def read_index():
     return FileResponse('static/test.html')
 
-@app.post("/evaluate")
-async def evaluate(game_data: GameData) -> dict:
-    game_dict = game_data.model_dump() 
+@app.post("/api/feedback/balance", response_model=BalanceFeedbackResponse)
+async def evaluate(game_data: GameData):
+    game_dict = game_data.model_dump()
     result = evaluate_balance(game_dict)
-    return {"evaluation_result": result}
-
-
-
-
+    return result
+#cd backend-python/balance
+#uvicorn main:app --reload
