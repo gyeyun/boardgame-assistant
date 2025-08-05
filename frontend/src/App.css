@@ -1,38 +1,170 @@
 .App {
-  text-align: center;
+  display: flex;
+  height: 100vh;
+  background: linear-gradient(135deg, #e0f7fa 0%, #f5f7fa 100%);
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden; /* 상위 오버플로우 제거 */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.sidebar {
+  width: 200px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  color: #2c3e50;
+  transition: transform 0.3s ease;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.sidebar:hover {
+  transform: translateX(-5px);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+  color: #2c3e50;
+  transition: opacity 0.3s ease;
+}
+
+.header:hover {
+  opacity: 0.8;
+}
+
+.content {
+  flex: 1;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 20px;
+  overflow-y: auto; /* 세로 스크롤 활성화 */
+  min-height: 0; /* 유연한 높이 설정 */
 }
 
-.App-link {
-  color: #61dafb;
+h2 {
+  color: #3498db;
+  font-size: 28px;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.block-row {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.block {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+label {
+  color: #34495e;
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #2c3e50;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+}
+
+.buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #3498db, #8e44ad);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+}
+
+button:first-child {
+  background: linear-gradient(45deg, #ecf0f1, #bdc3c7);
+  color: #2c3e50;
+}
+
+button:first-child:hover {
+  background: linear-gradient(45deg, #dfe6e9, #b0b7bd);
+}
+
+.feedback {
+  margin-top: 20px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.feedback h3 {
+  color: #3498db;
+  margin-bottom: 15px;
+}
+
+.feedback p, .feedback ul {
+  color: #34495e;
+}
+
+.feedback ul {
+  padding-left: 20px;
 }
