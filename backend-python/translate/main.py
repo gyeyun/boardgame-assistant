@@ -1,12 +1,11 @@
-import os
-from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from openai import OpenAI
+import sys
+import os
 
-load_dotenv()
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+from utils.openai_utils import call_openai
 
 app = FastAPI()
 
@@ -37,15 +36,10 @@ async def translate_content(request: TranslationRequest):
         raise HTTPException(status_code=404, detail="Content not found")
 
     prompt = f"Translate the following text to {request.targetLanguage}:\n\n{original_text}"
+    translated_text = call_openai(prompt)
 
-    try:
-        completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": prompt}]
-        )
-        translated_text = completion.choices[0].message.content.strip()
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Translation failed: {str(e)}")
+    if not translated_text:
+        raise HTTPException(status_code=500, detail="Translation failed")
 
     translated_content_id = next_content_id
     dummy_contents[translated_content_id] = translated_text
